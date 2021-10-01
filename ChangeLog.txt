@@ -1,4 +1,7 @@
+V0.3
+ - Creation base de donnée
+ - Ajout Création du Character
+
 V0.2
  - Ajout Entity Character
  - Ajout CharacterController
- - Ajout test
