@@ -39,7 +39,7 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function create(): Character
     {
         $character = new Character(); 
         $character
@@ -52,6 +52,7 @@ class CharacterService implements CharacterServiceInterface
             ->setLife(12)
             ->setImage('/images/eldalote.jpg')
             ->setCreation(new \DateTime())
+            ->setModification(new \DateTime())
             ->setIdentifier(hash('sha1', uniqid()))
         ;
         
@@ -64,7 +65,7 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function modify(Character $character)
+    public function modify(Character $character): Character
     {
         $character
             ->setKind('Seigneur')
@@ -75,6 +76,7 @@ class CharacterService implements CharacterServiceInterface
             ->setIntelligence(110)
             ->setLife(13)
             ->setImage('/images/gorthol.jpg')
+            ->setModification(new \DateTime())
         ;
         
         $this->em->persist($character);
@@ -86,10 +88,12 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function delete(Character $character)
+    public function delete(Character $character): bool
     {        
         $this->em->remove($character);
 
-        return $this->em->flush();
+        $this->em->flush();
+
+        return true;
     }
 }
