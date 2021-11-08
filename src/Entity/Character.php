@@ -21,11 +21,6 @@ class Character
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $kind;
-
-    /**
-     * @ORM\Column(type="string", length=16)
-     */
     private $name;
 
     /**
@@ -39,7 +34,7 @@ class Character
     private $caste;
 
     /**
-     * @ORM\Column(type="string", length=16, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $knowledge;
 
@@ -59,6 +54,11 @@ class Character
     private $image;
 
     /**
+     * @ORM\Column(type="string", length=16)
+     */
+    private $kind;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $creation;
@@ -68,29 +68,9 @@ class Character
      */
     private $identifier;
 
-    /**
-     * Converts the entity in an array
-     */
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getKind(): ?string
-    {
-        return $this->kind;
-    }
-
-    public function setKind(string $kind): self
-    {
-        $this->kind = $kind;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -173,6 +153,26 @@ class Character
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Converts the entity in an array.
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
+
+    public function getKind(): ?string
+    {
+        return $this->kind;
+    }
+
+    public function setKind(string $kind): self
+    {
+        $this->kind = $kind;
 
         return $this;
     }
