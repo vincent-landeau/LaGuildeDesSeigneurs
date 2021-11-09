@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CharacterRepository::class)
@@ -20,56 +21,97 @@ class Character
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\NotBlank
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 16,
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 16,
+     * )
      */
     private $surname;
 
     /**
      * @ORM\Column(type="string", length=16, nullable=true)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 16,
+     * )
      */
     private $caste;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 16,
+     * )
      */
     private $knowledge;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 16,
+     * )
      */
     private $intelligence;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Length (
+     *  min = 1,
+     *  max = 16,
+     * )
      */
     private $life;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 255,
+     * )
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\NotBlank
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 16,
+     * )
      */
     private $kind;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $creation;
 
     /**
      * @ORM\Column(type="string", length=40)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 40,
+     * )
      */
     private $identifier;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $modification;
 

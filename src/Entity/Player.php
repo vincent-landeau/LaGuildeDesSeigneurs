@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
@@ -20,36 +21,58 @@ class Player
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 255,
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 255,
+     * )
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 255,
+     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Length (
+     *  min = 1,
+     *  max = 16,
+     * )
      */
     private $mirian;
 
     /**
      * @ORM\Column(type="string", length=40)
+     * @Assert\Length (
+     *  min = 3,
+     *  max = 40,
+     * )
      */
     private $identifier;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $creation;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $modification;
 
@@ -122,18 +145,6 @@ class Player
     public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
-
-        return $this;
-    }
-
-    public function getPseudo(): ?string
-    {
-        return $this->pseudo;
-    }
-
-    public function setPseudo(string $pseudo): self
-    {
-        $this->pseudo = $pseudo;
 
         return $this;
     }

@@ -3,23 +3,37 @@
 namespace App\Services;
 
 use App\Entity\Character;
+use App\Form\CharacterType;
+use App\Repository\CharacterRepository;
+
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Finder\Finder;
-use App\Repository\CharacterRepository;
 use Doctrine\ORM\EntityManagerInterface;
+
+use LogicException;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CharacterService implements CharacterServiceInterface
 {
     private $characterRepository;
+    private $formFactory;
     private $em;
+    private $validator;
 
     public function __construct(
         CharacterRepository $characterRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        FormFactoryInterface $formFactory,
+        ValidatorInterface $validator
     )
     {
         $this->characterRepository = $characterRepository;
         $this->em = $em;
+        $this->formFactory = $formFactory;
+        $this->validator = $validator;
     }
 
     /**
@@ -40,23 +54,18 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function create(string $data)
     {
-        $character = new Character(); 
+        //Use with {"kind":"Dame","name":"Eldalótë","surname":"Fleur elfique","caste":"Elfe","knowledge":"Arts","intelligence":120,"life":12,"image":"/images/eldalote.jpg"}
+        $character = new Character();
         $character
-            ->setKind('Dame')
-            ->setName('Eldalote')
-            ->setSurname('Fleur elfique')
-            ->setCaste('Elfe')
-            ->setKnowledge('Arts')
-            ->setIntelligence(120)
-            ->setLife(12)
-            ->setImage('/images/eldalote.jpg')
-            ->setCreation(new \DateTime())
-            ->setModification(new \DateTime())
             ->setIdentifier(hash('sha1', uniqid()))
+            ->setCreation(new DateTime())
+            ->setModification(new DateTime())
         ;
-        
+        $this->submit($character, CharacterType::class, $data);
+        $this->isEntityFilled($character);
+
         $this->em->persist($character);
         $this->em->flush();
 
@@ -66,19 +75,44 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function modify(Character $character)
+    public function isEntityFilled(Character $character)
     {
-        $character
-            ->setKind('Seigneur')
-            ->setName('Gorthol')
-            ->setSurname('Haume de terreur')
-            ->setCaste('Chevalier')
-            ->setKnowledge('Diplomatie')
-            ->setIntelligence(110)
-            ->setLife(13)
-            ->setModification(new \DateTime())
-            ->setImage('/images/gorthol.jpg')
-        ;
+        $errors = $this->validator->validate($character);
+        if (count($errors)) {
+            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . json_encode($character->toArray()));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function submit(Character $character, $formName, $data)
+    {
+        $dataArray = is_array($data) ? $data : json_decode($data, true);
+
+        //Bad array
+        if (null !== $data && !is_array($dataArray)) {
+            throw new UnprocessableEntityHttpException('Submitted data is not an array -> ' . $data);
+        }
+
+        //Submits form
+        $form = $this->formFactory->create($formName, $character, ['csrf_protection' => false]);
+        $form->submit($dataArray, false);//With false, only submitted fields are validated
+
+        //Gets errors
+        $errors = $form->getErrors();
+        foreach ($errors as $error) {
+            throw new LogicException('Error ' . get_class($error->getCause()) . ' --> ' . $error->getMessageTemplate() . ' ' . json_encode($error->getMessageParameters()));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function modify(Character $character, string $data)
+    {
+        $character->setModification(new \DateTime());
+        $this->submit($character, CharacterType::class, $data);
         
         $this->em->persist($character);
         $this->em->flush();

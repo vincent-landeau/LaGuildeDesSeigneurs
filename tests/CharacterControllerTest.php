@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CharacterControllerTest extends WebTestCase
 {
@@ -17,9 +18,25 @@ class CharacterControllerTest extends WebTestCase
 
     public function testCreate() 
     {
-        $this->client->request('POST', '/character/create');
+        $this->client->request(
+            'POST',
+            '/character/create',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{
+                "kind" : "Dame",
+                "name" : "Eldalote",
+                "surname" : "Fleur elfique",
+                "caste" : "Elfe",
+                "knowledge" : "Arts",
+                "intelligence" : 120,
+                "life" : 12,
+                "image" : "/images/dames/eldalote.jpg"  
+            }'
+        );
 
-        $this->assertJsonResponse($this->client->getResponse());
+        $this->assertJsonResponse($this->client->getResponse(), 200);
         $this->defineIdentifier();
         $this->assertIdentifier();
     }
@@ -52,7 +69,6 @@ class CharacterControllerTest extends WebTestCase
     public function testDisplay()
     {
         $this->client->request('GET', '/character/display/' . self::$identifier);
-
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
@@ -71,7 +87,37 @@ class CharacterControllerTest extends WebTestCase
 
     public function testModify() 
     {
-        $this->client->request('PUT', '/character/modify/' . self::$identifier);
+        $this->client->request(
+            'PUT',
+            '/character/modify/' . self::$identifier,
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{
+                "kind" : "Seigneur",
+                "name" : "Gorthol"
+            }'
+        );
+        $this->assertJsonResponse();
+        $this->assertIdentifier();
+
+        $this->client->request(
+            'PUT',
+            '/character/modify/' . self::$identifier,
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{
+                "kind" : "Seigneur",
+                "name" : "Gorthol",
+                "surname" : "Haume de terreur",
+                "caste" : "Chevalier",
+                "knowledge" : "Diplomatie",
+                "intelligence" : 110,
+                "life" : 13,
+                "image" : "/images/seigneurs/gorthol.jpg"  
+            }'
+        );
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
