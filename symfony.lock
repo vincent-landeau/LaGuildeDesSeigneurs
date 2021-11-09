@@ -242,8 +242,6 @@
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
     },
-<<<<<<< HEAD
-=======
     "symfony/monolog-bridge": {
         "version": "v5.3.7"
     },
@@ -265,7 +263,6 @@
     "symfony/options-resolver": {
         "version": "v5.3.7"
     },
->>>>>>> main
     "symfony/password-hasher": {
         "version": "v5.3.8"
     },
@@ -339,19 +336,11 @@
             "ref": "3307d76caa2d12fb10ade57975beb3d8975df396"
         },
         "files": [
-<<<<<<< HEAD
-            "./config/packages/security.yaml"
-        ]
-    },
-    "symfony/security-core": {
-        "version": "v5.3.10"
-=======
             "config/packages/security.yaml"
         ]
     },
     "symfony/security-core": {
         "version": "v5.3.8"
->>>>>>> main
     },
     "symfony/security-csrf": {
         "version": "v5.3.4"
