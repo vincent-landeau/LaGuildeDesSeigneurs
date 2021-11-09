@@ -10,65 +10,94 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class PlayerVoter extends Voter
 {
-    public const PLAYER_CREATEY = 'playerDisplay';
+    public const PLAYER_DISPLAY = 'playerDisplay';
     public const PLAYER_CREATE = 'playerCreate';
-    public const PLAYER_CREATE= 'playerIndex';
-    public const PLAYER_CREATE = 'playerDelete';
-    public const PLAYER_CREATE = 'playerModify';
+    public const PLAYER_INDEX = 'playerIndex';
+    public const PLAYER_MODIFY = 'playerModify';
+    public const PLAYER_DELETE = 'playerDelete';
+
     private const ATTRIBUTES = array(
-        self::PLAYER_CREATEY,
+        self::PLAYER_DISPLAY,
         self::PLAYER_CREATE,
-        self::PLAYER_CREATE
-        self::self::PLAYER_CREATE,
-        self::self::PLAYER_CREATE,
+        self::PLAYER_INDEX,
+        self::PLAYER_MODIFY,
+        self::PLAYER_DELETE
     );
+
     protected function supports(string $attribute, $subject): bool
     {
         if (null !== $subject) {
             return $subject instanceof Player && in_array($attribute, self::ATTRIBUTES);
         }
+        return in_array($attribute, self::ATTRIBUTES);
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, self::ATTRIBUTES);
+        return in_array($attribute, ['POST_EDIT', 'POST_VIEW'])
+            && $subject instanceof \App\Entity\Player;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
+        //Defines access tights
         switch ($attribute) {
-            case self::PLAYER_CREATEY:
-            case self::PLAYER_CREATE
+            case self::PLAYER_DISPLAY:
+            case self::PLAYER_INDEX:
+                //Peut envoyer $token et $subject pour tester des conditions
                 return $this->canDisplay();
                 break;
             case self::PLAYER_CREATE:
                 return $this->canCreate();
                 break;
-            case self::PLAYER_CREATE:
+            case self::PLAYER_MODIFY:
                 return $this->canModify();
                 break;
-            case self::PLAYER_CREATE:
+            case self::PLAYER_DELETE:
                 return $this->canDelete();
+        }
+        throw new LogicException('Invalid attribute: ' . $attribute);
+
+        $user = $token->getUser();
+        // if the user is anonymous, do not grant access
+        if (!$user instanceof UserInterface) {
+            return false;
+        }
+
+        // ... (check conditions and return true to grant permission) ...
+        switch ($attribute) {
+            case 'POST_EDIT':
+                // logic to determine if the user can EDIT
+                // return true or false
+                break;
+            case 'POST_VIEW':
+                // logic to determine if the user can VIEW
+                // return true or false
                 break;
         }
 
-        throw new LogicException('Invalid attribute: ' . $attribute);
+        return false;
     }
-
-    private function canDisplay(): bool
+    /**
+     * Check if is allowed to display
+     */
+    private function canDisplay()
     {
         return true;
     }
 
-    private function canCreate(): bool
+    /**
+     * Check if is allowed to create
+     */
+    private function canCreate()
     {
         return true;
     }
 
-    private function canModify(): bool
+    public function canModify()
     {
         return true;
     }
 
-    private function canDelete(): bool
+    public function canDelete()
     {
         return true;
     }

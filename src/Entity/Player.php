@@ -4,11 +4,10 @@ namespace App\Entity;
 
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
- * @ORM\Entity(repositoryClass=CharacterRepository::class)
- * @ORM\Table(name="players")
+ * @ORM\Table(name="Player")
+ * @ORM\Entity(repositoryClass=PlayerRepository::class)
  */
 class Player
 {
@@ -20,31 +19,39 @@ class Player
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=255)
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=255)
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=255)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $mirian;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $identifier;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pseudo;
 
     /**
      * @ORM\Column(type="datetime")
      */
     private $creation;
-
 
     /**
      * @ORM\Column(type="datetime")
@@ -52,32 +59,23 @@ class Player
     private $modification;
 
     /**
-     * @return int
+     * Converts the entity in an Array
      */
-    public function getId(): int
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstname(): string
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    /**
-     * @param string $firstname
-     */
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
@@ -85,17 +83,11 @@ class Player
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastname(): string
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    /**
-     * @param string $lastname
-     */
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
@@ -103,17 +95,11 @@ class Player
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -121,60 +107,63 @@ class Player
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getMirian(): int
+    public function getMirian(): ?int
     {
         return $this->mirian;
     }
 
-    /**
-     * @param int $mirian
-     */
-    public function setMirian(int $mirian): self
+    public function setMirian(?int $mirian): self
     {
         $this->mirian = $mirian;
 
         return $this;
     }
 
-    /**
-     * @return ?DateTime
-     */
-    public function getCreation(): ?DateTime
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    /**
-     * @param DateTime $creation
-     */
-    public function setCreation(DateTime $creation): self
+    public function setCreation(\DateTimeInterface $creation): self
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    /**
-     * @return ?DateTime
-     */
-    public function getModification(): ?DateTime
+    public function getModification(): ?\DateTimeInterface
     {
         return $this->modification;
     }
 
-    /**
-     * @param DateTime $modification
-     */
-    public function setModification(DateTime $modification): self
+    public function setModification(\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
 
         return $this;
     }
-
-
-
 }

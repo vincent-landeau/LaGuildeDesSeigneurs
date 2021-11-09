@@ -5,9 +5,10 @@ namespace App\Entity;
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
- * @ORM\Entity(repositoryClass=CharacterRepository::class)
  * @ORM\Table(name="characters")
+ * @ORM\Entity(repositoryClass=CharacterRepository::class)
  */
 class Character
 {
@@ -34,7 +35,7 @@ class Character
     private $caste;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=16, nullable=true)
      */
     private $knowledge;
 
@@ -64,14 +65,22 @@ class Character
     private $creation;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string", length=40)
+     */
+    private $identifier;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $modification;
 
     /**
-     * @ORM\Column(type="string", length=40)
+     * Converts the entity in an Array
      */
-    private $identifier;
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
 
     public function getId(): ?int
     {
@@ -162,14 +171,6 @@ class Character
         return $this;
     }
 
-    /**
-     * Converts the entity in an array.
-     */
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
-
     public function getKind(): ?string
     {
         return $this->kind;
@@ -194,20 +195,6 @@ class Character
         return $this;
     }
 
-    public function getModification(): ?\DateTimeInterface
-    {
-        return $this->modification;
-    }
-
-    public function setModification(\DateTimeInterface $modification): self
-    {
-        $this->modification = $modification;
-
-        return $this;
-    }
-
-
-
     public function getIdentifier(): ?string
     {
         return $this->identifier;
@@ -216,6 +203,18 @@ class Character
     public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function getModification(): ?\DateTimeInterface
+    {
+        return $this->modification;
+    }
+
+    public function setModification(?\DateTimeInterface $modification): self
+    {
+        $this->modification = $modification;
 
         return $this;
     }
