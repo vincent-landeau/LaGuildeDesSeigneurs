@@ -4,17 +4,8 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CharacterControllerTest extends WebTestCase
+class PlayerControllerTest extends WebTestCase
 {
-<<<<<<< HEAD
-
-    public function testRedirectIndex()
-    {
-        $client = static::createClient();
-        $client->request('GET', '/character');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-    }
-=======
     private $client; 
     private $content; 
     private static $identifier;
@@ -26,7 +17,7 @@ class CharacterControllerTest extends WebTestCase
 
     public function testCreate() 
     {
-        $this->client->request('POST', '/character/create');
+        $this->client->request('POST', '/player/create');
 
         $this->assertJsonResponse($this->client->getResponse());
         $this->defineIdentifier();
@@ -40,82 +31,96 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testRedirectIndex()
     {
-        $this->client->request('GET', '/character');
+        $this->client->request('GET', '/player');
         
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
->>>>>>> main
     /**
      * Tests index.
      */
     public function testIndex()
     {
-<<<<<<< HEAD
-        $client = static::createClient();
-        $client->request('GET', '/character/index');
-=======
-        $this->client->request('GET', '/character/index');
->>>>>>> main
+        $this->client->request('GET', '/player/index');
 
         $this->assertJsonResponse($this->client->getResponse());
     }
 
-<<<<<<< HEAD
-
-=======
     /**
      * Test d'affichage d'un caractère;
      */
->>>>>>> main
     public function testDisplay()
     {
-        $this->client->request('GET', '/character/display/' . self::$identifier);
+        $this->client->request('GET', '/player/display/' . self::$identifier);
 
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
 
+    /**
+     * Test d'un mauvais identifier;
+     */
     public function testBadIdentifier()
     {
-        $this->client->request('GET', '/character/display/badIdentifier');
+        $this->client->request('GET', '/player/display/badIdentifier');
         $this->assertError404($this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test d'un identifier non existant;
+     */
     public function testInexistingIdentifier()
     {
-        $this->client->request('GET', '/character/display/7414a10767e9f5e71d2fdd262c9a34ec695error');
+        $this->client->request('GET', '/player/display/7ba48618db8e2108a57604108ff9bc835a3error');
         $this->assertError404($this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test d'une modification de player;
+     */
     public function testModify() 
     {
-        $this->client->request('PUT', '/character/modify/' . self::$identifier);
+        $this->client->request('PUT', '/player/modify/' . self::$identifier);
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
 
+    /**
+     * Test d'une suppression de player;
+     */
     public function testDelete() 
     {
-        $this->client->request('DELETE', '/character/delete/' . self::$identifier);
+        $this->client->request('DELETE', '/player/delete/' . self::$identifier);
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test d'assertion d'un identifier
+     */
     public function assertIdentifier()
     {
         $this->assertArrayHasKey('identifier', $this->content);
     }
 
+    /**
+     * Définition de l'identifier
+     */
     public function defineIdentifier()
     {
         self::$identifier = $this->content['identifier'];
     }
 
+    /**
+     * Test d'assertion d'une erreur 404
+     */
     public function assertError404($statusCode)
     {
         $this->assertEquals(404, $statusCode);
     }
 
+    /**
+     * Test d'assertion d'une réponse JSON
+     */
     public function assertJsonResponse()
     {
         $response = $this->client->getResponse();
