@@ -16,68 +16,54 @@ class CharacterVoter extends Voter
     public const CHARACTER_MODIFY = 'characterModify';
     public const CHARACTER_DELETE = 'characterDelete';
 
-    private const ATTRIBUTES = array(
+    private const ATTRIBUTES =  array(
         self::CHARACTER_DISPLAY,
         self::CHARACTER_CREATE,
         self::CHARACTER_INDEX,
         self::CHARACTER_MODIFY,
-        self::CHARACTER_DELETE
+        self::CHARACTER_DELETE,
     );
 
     protected function supports(string $attribute, $subject): bool
     {
-        if (null !== $subject) {
-            return $subject instanceof Character && in_array($attribute, self::ATTRIBUTES);
-        }
+        if(null !== $subject) return $subject instanceof Character && in_array($attribute, self::ATTRIBUTES);
+
         return in_array($attribute, self::ATTRIBUTES);
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['POST_EDIT', 'POST_VIEW'])
-            && $subject instanceof \App\Entity\Character;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        //Defines access tights
         switch ($attribute) {
-            case self::CHARACTER_DISPLAY:
-            case self::CHARACTER_INDEX:
-                //Peut envoyer $token et $subject pour tester des conditions
+            case self::CHARACTER_DISPLAY: 
                 return $this->canDisplay();
                 break;
-            case self::CHARACTER_CREATE:
+            
+            case self::CHARACTER_CREATE: 
                 return $this->canCreate();
                 break;
-            case self::CHARACTER_MODIFY:
+
+            case self::CHARACTER_INDEX: 
+                return $this->canIndex();
+                break;
+
+            case self::CHARACTER_MODIFY: 
                 return $this->canModify();
                 break;
-            case self::CHARACTER_DELETE:
+                
+            case self::CHARACTER_DELETE: 
                 return $this->canDelete();
+                break;
         }
+
         throw new LogicException('Invalid attribute: ' . $attribute);
-
-        $user = $token->getUser();
-        // if the user is anonymous, do not grant access
-        if (!$user instanceof UserInterface) {
-            return false;
-        }
-
-        // ... (check conditions and return true to grant permission) ...
-        switch ($attribute) {
-            case 'POST_EDIT':
-                // logic to determine if the user can EDIT
-                // return true or false
-                break;
-            case 'POST_VIEW':
-                // logic to determine if the user can VIEW
-                // return true or false
-                break;
-        }
 
         return false;
     }
+
     /**
-     * Check if is allowed to display
+     * Checks if is allowed to display
+     *
+     * @return boolean
      */
     private function canDisplay()
     {
@@ -85,19 +71,41 @@ class CharacterVoter extends Voter
     }
 
     /**
-     * Check if is allowed to create
+     * Checks if is allowed to create
+     *
+     * @return boolean
      */
-    private function canCreate()
+    private function  canCreate()
     {
         return true;
     }
 
-    public function canModify()
+    /**
+     * Checks if is allowed to index
+     *
+     * @return boolean
+     */
+    private function  canIndex()
     {
         return true;
     }
 
-    public function canDelete()
+    /**
+     * Checks if is allowed to modify
+     *
+     * @return boolean
+     */
+    private function  canModify()
+    {
+        return true;
+    }
+
+    /**
+     * Checks if is allowed to delete
+     *
+     * @return boolean
+     */
+    private function  canDelete()
     {
         return true;
     }

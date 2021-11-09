@@ -2,11 +2,10 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Player;
 use LogicException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Entity\Player;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PlayerVoter extends Voter
 {
@@ -16,68 +15,54 @@ class PlayerVoter extends Voter
     public const PLAYER_MODIFY = 'playerModify';
     public const PLAYER_DELETE = 'playerDelete';
 
-    private const ATTRIBUTES = array(
+    private const ATTRIBUTES =  array(
         self::PLAYER_DISPLAY,
         self::PLAYER_CREATE,
         self::PLAYER_INDEX,
         self::PLAYER_MODIFY,
-        self::PLAYER_DELETE
+        self::PLAYER_DELETE,
     );
 
     protected function supports(string $attribute, $subject): bool
     {
-        if (null !== $subject) {
-            return $subject instanceof Player && in_array($attribute, self::ATTRIBUTES);
-        }
+        if(null !== $subject) return $subject instanceof Player && in_array($attribute, self::ATTRIBUTES);
+
         return in_array($attribute, self::ATTRIBUTES);
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['POST_EDIT', 'POST_VIEW'])
-            && $subject instanceof \App\Entity\Player;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        //Defines access tights
         switch ($attribute) {
-            case self::PLAYER_DISPLAY:
-            case self::PLAYER_INDEX:
-                //Peut envoyer $token et $subject pour tester des conditions
+            case self::PLAYER_DISPLAY: 
                 return $this->canDisplay();
                 break;
-            case self::PLAYER_CREATE:
+            
+            case self::PLAYER_CREATE: 
                 return $this->canCreate();
                 break;
-            case self::PLAYER_MODIFY:
+
+            case self::PLAYER_INDEX: 
+                return $this->canIndex();
+                break;
+
+            case self::PLAYER_MODIFY: 
                 return $this->canModify();
                 break;
-            case self::PLAYER_DELETE:
+                
+            case self::PLAYER_DELETE: 
                 return $this->canDelete();
+                break;
         }
+
         throw new LogicException('Invalid attribute: ' . $attribute);
-
-        $user = $token->getUser();
-        // if the user is anonymous, do not grant access
-        if (!$user instanceof UserInterface) {
-            return false;
-        }
-
-        // ... (check conditions and return true to grant permission) ...
-        switch ($attribute) {
-            case 'POST_EDIT':
-                // logic to determine if the user can EDIT
-                // return true or false
-                break;
-            case 'POST_VIEW':
-                // logic to determine if the user can VIEW
-                // return true or false
-                break;
-        }
 
         return false;
     }
+
     /**
-     * Check if is allowed to display
+     * Checks if is allowed to display
+     *
+     * @return boolean
      */
     private function canDisplay()
     {
@@ -85,19 +70,41 @@ class PlayerVoter extends Voter
     }
 
     /**
-     * Check if is allowed to create
+     * Checks if is allowed to create
+     *
+     * @return boolean
      */
-    private function canCreate()
+    private function  canCreate()
     {
         return true;
     }
 
-    public function canModify()
+    /**
+     * Checks if is allowed to index
+     *
+     * @return boolean
+     */
+    private function  canIndex()
     {
         return true;
     }
 
-    public function canDelete()
+    /**
+     * Checks if is allowed to modify
+     *
+     * @return boolean
+     */
+    private function  canModify()
+    {
+        return true;
+    }
+
+    /**
+     * Checks if is allowed to delete
+     *
+     * @return boolean
+     */
+    private function  canDelete()
     {
         return true;
     }

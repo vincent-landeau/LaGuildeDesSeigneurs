@@ -6,8 +6,8 @@ use App\Repository\PlayerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="Player")
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
+ * @ORM\Table(name="players")
  */
 class Player
 {
@@ -34,19 +34,14 @@ class Player
     private $email;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
     private $mirian;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=40)
      */
     private $identifier;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $pseudo;
 
     /**
      * @ORM\Column(type="datetime")
@@ -57,14 +52,6 @@ class Player
      * @ORM\Column(type="datetime")
      */
     private $modification;
-
-    /**
-     * Converts the entity in an Array
-     */
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
 
     public function getId(): ?int
     {
@@ -112,11 +99,19 @@ class Player
         return $this->mirian;
     }
 
-    public function setMirian(?int $mirian): self
+    public function setMirian(int $mirian): self
     {
         $this->mirian = $mirian;
 
         return $this;
+    }
+
+    /**
+     * Converts the entity in an array.
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 
     public function getIdentifier(): ?string

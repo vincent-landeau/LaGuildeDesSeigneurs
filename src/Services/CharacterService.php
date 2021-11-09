@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Entity\Character;
-use App\Repository\CharacterRepository;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Finder\Finder;
+use App\Repository\CharacterRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CharacterService implements CharacterServiceInterface
@@ -39,7 +40,7 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function create(): Character
+    public function create()
     {
         $character = new Character(); 
         $character
@@ -65,7 +66,7 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function modify(Character $character): Character
+    public function modify(Character $character)
     {
         $character
             ->setKind('Seigneur')
@@ -75,8 +76,8 @@ class CharacterService implements CharacterServiceInterface
             ->setKnowledge('Diplomatie')
             ->setIntelligence(110)
             ->setLife(13)
-            ->setImage('/images/gorthol.jpg')
             ->setModification(new \DateTime())
+            ->setImage('/images/gorthol.jpg')
         ;
         
         $this->em->persist($character);
@@ -88,12 +89,59 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function delete(Character $character): bool
+    public function delete(Character $character)
     {        
-        $this->em->remove($character);
+        $this->em->remove($character);  
 
-        $this->em->flush();
-
-        return true;
+        return $this->em->flush();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImages(int $number)
+    {
+        $folder = __DIR__ . '/../../public/images';
+
+        $finder = new Finder();
+        $finder 
+            ->files()
+            ->in($folder)
+            ->notPath('/cartes/')
+            ->sortByName()
+        ;
+
+        $images = [];
+        foreach ($finder as $file) {
+            $images[] = '/images/' . $file->getRelativePathname();
+        }
+        shuffle($images);
+
+        return array_slice($images, 0, $number, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImagesByKind(string $kind, int $number)
+    {
+        $folder = __DIR__ . '/../../public/images' . $kind;
+
+        $finder = new Finder();
+        $finder 
+            ->files()
+            ->in($folder)
+            ->notPath('/cartes/')
+            ->sortByName()
+        ;
+
+        $images = [];
+        foreach ($finder as $file) {
+            $images[] = '/images/' . $kind . '/' . $file->getRelativePathname();
+        }
+        shuffle($images);
+
+        return array_slice($images, 0, $number, true);
+    }
+        
 }

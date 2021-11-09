@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Entity\Player;
 use App\Repository\PlayerRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PlayerService implements PlayerServiceInterface
@@ -39,15 +38,18 @@ class PlayerService implements PlayerServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function create(): Player
+    public function create()
     {
-        $player = new Player();
+        $player = new Player(); 
         $player
-            ->setFirstname('Vincent')
-            ->setLastname('Landeau')
-            ->setEmail('vincentlandeau1999@gmail.com')
-            ->setMirian(0)
+            ->setFirstname('Mathilde')
+            ->setLastname('Dutrieux')
+            ->setEmail('mathilde.dutrieux@gmail.com')
+            ->setMirian('10000000')
+            ->setPseudo('mathou')
             ->setCreation(new \DateTime())
+            ->setModification(new \DateTime())
+            ->setIdentifier(hash('sha1', uniqid()))
         ;
         
         $this->em->persist($player);
@@ -59,13 +61,14 @@ class PlayerService implements PlayerServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function modify(Player $player): Player
+    public function modify(Player $player)
     {
         $player
-            ->setFirstname('Marius')
-            ->setLastname('Proton')
-            ->setEmail('marius@proton.com')
-            ->setMirian(1000)
+            ->setFirstname('Charlotte')
+            ->setLastname('Der Baghdassarian')
+            ->setEmail('c.derbaghdassarian@gmail.com')
+            ->setMirian('10000000')
+            ->setPseudo('charlottedrb')
             ->setModification(new \DateTime())
         ;
         
@@ -78,12 +81,10 @@ class PlayerService implements PlayerServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function delete(Player $player): bool
+    public function delete(Player $player)
     {        
         $this->em->remove($player);
 
-        $this->em->flush();
-
-        return true;
+        return $this->em->flush();
     }
 }

@@ -5,10 +5,9 @@ namespace App\Entity;
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
- * @ORM\Table(name="characters")
  * @ORM\Entity(repositoryClass=CharacterRepository::class)
+ * @ORM\Table(name="characters")
  */
 class Character
 {
@@ -35,7 +34,7 @@ class Character
     private $caste;
 
     /**
-     * @ORM\Column(type="string", length=16, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $knowledge;
 
@@ -70,17 +69,9 @@ class Character
     private $identifier;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private $modification;
-
-    /**
-     * Converts the entity in an Array
-     */
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
 
     public function getId(): ?int
     {
@@ -169,6 +160,14 @@ class Character
         $this->image = $image;
 
         return $this;
+    }
+
+    /**
+     * Converts the entity in an array.
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 
     public function getKind(): ?string
