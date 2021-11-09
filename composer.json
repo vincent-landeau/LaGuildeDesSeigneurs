@@ -8,7 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "composer/package-versions-deprecated": "1.11.99.4",
-        "doctrine/doctrine-bundle": "^2",
+        "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
         "sensio/framework-extra-bundle": "^6.2",
@@ -21,12 +21,9 @@
         "symfony/proxy-manager-bridge": "5.3.*",
         "symfony/runtime": "5.3.*",
         "symfony/security-bundle": "5.3.*",
-<<<<<<< HEAD
-=======
         "symfony/security-csrf": "5.3.*",
         "symfony/twig-bundle": "5.3.*",
         "symfony/validator": "5.3.*",
->>>>>>> main
         "symfony/yaml": "5.3.*"
     },
     "require-dev": {
