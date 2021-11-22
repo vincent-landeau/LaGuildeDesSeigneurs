@@ -12,10 +12,10 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        for ($i=0; $i < 10; $i++) { 
+        for ($i=0; $i < 10; $i++) {
             $character = new Character();
             $character
-                ->setKind(rand(0 ,1) ? 'Dame' : 'Seigneur')
+                ->setKind(rand(0, 1) ? 'Dame' : 'Seigneur')
                 ->setName('Eldalote' . $i)
                 ->setSurname('Fleur elfique')
                 ->setCaste('Elfe')
@@ -31,14 +31,13 @@ class AppFixtures extends Fixture
             $manager->persist($character);
         }
 
-        for ($i=0; $i < 3; $i++) { 
+        for ($i=0; $i < 3; $i++) {
             $player = new Player();
             $player
             ->setFirstname('Charlotte' . $i)
             ->setLastname('Der Baghdassarian')
             ->setEmail('c.derbaghdassarian@gmail.com')
             ->setMirian('10000000')
-            ->setPseudo('chachou' . $i)
             ->setCreation(new \DateTime())
             ->setModification(new \DateTime())
             ->setIdentifier(hash('sha1', uniqid()))

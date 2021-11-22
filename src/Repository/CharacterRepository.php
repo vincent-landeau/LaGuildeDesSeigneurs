@@ -19,7 +19,7 @@ class CharacterRepository extends ServiceEntityRepository
         parent::__construct($registry, Character::class);
     }
 
-    public function findOnebyIdentifier($identifier) : ?Character
+    public function findOnebyIdentifier($identifier): ?Character
     {
         return $this->createQueryBuilder('c')
             ->select('c', 'p')

@@ -19,7 +19,7 @@ class PlayerRepository extends ServiceEntityRepository
         parent::__construct($registry, Player::class);
     }
 
-    public function findOnebyIdentifier($identifier) : ?Player
+    public function findOnebyIdentifier($identifier): ?Player
     {
         return $this->createQueryBuilder('p')
             ->select('p', 'c')

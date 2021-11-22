@@ -31,8 +31,7 @@ class PlayerService implements PlayerServiceInterface
         EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
         ValidatorInterface $validator
-    )
-    {
+    ) {
         $this->playerRepository = $playerRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
@@ -75,7 +74,7 @@ class PlayerService implements PlayerServiceInterface
     {
         $errors = $this->validator->validate($player);
         if (count($errors)) {
-            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . json_encode($player->toArray()));
+            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . $this->serializeJson($player));
         }
     }
 
@@ -120,7 +119,7 @@ class PlayerService implements PlayerServiceInterface
      * {@inheritdoc}
      */
     public function delete(Player $player)
-    {        
+    {
         $this->em->remove($player);
 
         return $this->em->flush();
@@ -133,7 +132,7 @@ class PlayerService implements PlayerServiceInterface
     {
         $encoders = new JsonEncoder();
         $defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function($data) {
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
                 return $data->getIdentifier();
             }
         ];

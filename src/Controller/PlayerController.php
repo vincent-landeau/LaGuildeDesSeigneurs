@@ -20,7 +20,7 @@ class PlayerController extends AbstractController
     }
 
     #[Route('/player', name: 'player_redirect_index', methods: ['HEAD', 'GET'])]
-    public function redirectIndex() 
+    public function redirectIndex()
     {
         return $this->redirectToRoute('player_index');
     }
@@ -40,7 +40,8 @@ class PlayerController extends AbstractController
     public function display(Player $player)
     {
         $this->denyAccessUnlessGranted('playerDisplay', $player);
-        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));    }
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
+    }
 
     #[Route('/player/create', name: 'player_create', methods: ['HEAD', 'POST'])]
     public function create(Request $request)

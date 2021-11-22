@@ -15,3 +15,8 @@
 ###< symfony/phpunit-bridge ###
 /.idea/
 /migrations/
+/tools/php-cs-fixer/vendor
+
+rector.php
+
+.php-cs-fixer.cache

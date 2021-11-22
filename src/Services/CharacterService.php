@@ -33,8 +33,7 @@ class CharacterService implements CharacterServiceInterface
         EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
         ValidatorInterface $validator
-    )
-    {
+    ) {
         $this->characterRepository = $characterRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
@@ -77,7 +76,7 @@ class CharacterService implements CharacterServiceInterface
     {
         $errors = $this->validator->validate($character);
         if (count($errors)) {
-            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . json_encode($character->toArray()));
+            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . $this->serializeJson($character));
         }
     }
 
@@ -111,7 +110,7 @@ class CharacterService implements CharacterServiceInterface
     {
         $character->setModification(new \DateTime());
         $this->submit($character, CharacterType::class, $data);
-        
+
         $this->em->persist($character);
         $this->em->flush();
 
@@ -122,8 +121,8 @@ class CharacterService implements CharacterServiceInterface
      * {@inheritdoc}
      */
     public function delete(Character $character)
-    {        
-        $this->em->remove($character);  
+    {
+        $this->em->remove($character);
 
         return $this->em->flush();
     }
@@ -136,7 +135,7 @@ class CharacterService implements CharacterServiceInterface
         $folder = __DIR__ . '/../../public/images';
 
         $finder = new Finder();
-        $finder 
+        $finder
             ->files()
             ->in($folder)
             ->notPath('/cartes/')
@@ -160,7 +159,7 @@ class CharacterService implements CharacterServiceInterface
         $folder = __DIR__ . '/../../public/images' . $kind;
 
         $finder = new Finder();
-        $finder 
+        $finder
             ->files()
             ->in($folder)
             ->notPath('/cartes/')
@@ -184,7 +183,7 @@ class CharacterService implements CharacterServiceInterface
     {
         $encoders = new JsonEncoder();
         $defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function($data) {
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
                 return $data->getIdentifier();
             }
         ];
@@ -193,5 +192,4 @@ class CharacterService implements CharacterServiceInterface
 
         return $serializer->serialize($data, 'json');
     }
-        
 }
