@@ -22,7 +22,7 @@ class Player
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, name="gls_firstname")
      * @Assert\Length (
      *  min = 3,
      *  max = 255,
@@ -31,7 +31,7 @@ class Player
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, name="gls_lastname")
      * @Assert\Length (
      *  min = 3,
      *  max = 255,
@@ -40,7 +40,7 @@ class Player
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, name="gls_email")
      * @Assert\Length (
      *  min = 3,
      *  max = 255,
@@ -49,7 +49,7 @@ class Player
     private $email;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="gls_mirian")
      * @Assert\Length (
      *  min = 1,
      *  max = 16,
@@ -58,7 +58,7 @@ class Player
     private $mirian;
 
     /**
-     * @ORM\Column(type="string", length=40)
+     * @ORM\Column(type="string", length=40, name="gls_identifier")
      * @Assert\Length (
      *  min = 3,
      *  max = 40,
@@ -67,13 +67,13 @@ class Player
     private $identifier;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="gls_creation")
      * @Assert\Type("\DateTimeInterface")
      */
     private $creation;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="gls_modification")
      * @Assert\Type("\DateTimeInterface")
      */
     private $modification;
