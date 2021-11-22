@@ -14,6 +14,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CharacterService implements CharacterServiceInterface
@@ -41,14 +46,7 @@ class CharacterService implements CharacterServiceInterface
      */
     public function getAll()
     {
-        $charactersFinal = [];
-        $characters = $this->characterRepository->findAll();
-        
-        foreach ($characters as $character) {
-            $charactersFinal[] = $character->toArray();
-        }
-
-        return $charactersFinal;
+        return $this->characterRepository->findAll();
     }
 
     /**
@@ -176,6 +174,24 @@ class CharacterService implements CharacterServiceInterface
         shuffle($images);
 
         return array_slice($images, 0, $number, true);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serializeJson($data)
+    {
+        $encoders = new JsonEncoder();
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function($data) {
+                return $data->getIdentifier();
+            }
+        ];
+        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
+
+        return $serializer->serialize($data, 'json');
     }
         
 }

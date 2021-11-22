@@ -39,4 +39,9 @@ interface CharacterServiceInterface
      * Return character images by kind.
      */
     public function getImagesByKind(string $kind, int $number);
+
+    /**
+     * Deletes the player.
+     */
+    public function serializeJson($data);
 }

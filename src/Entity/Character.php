@@ -115,6 +115,11 @@ class Character
      */
     private $modification;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="characters")
+     */
+    private $player;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -256,6 +261,18 @@ class Character
     public function setModification(?\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(?Player $player): self
+    {
+        $this->player = $player;
 
         return $this;
     }

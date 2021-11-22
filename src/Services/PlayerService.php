@@ -12,6 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PlayerService implements PlayerServiceInterface
@@ -39,14 +44,7 @@ class PlayerService implements PlayerServiceInterface
      */
     public function getAll()
     {
-        $playersFinal = [];
-        $players = $this->playerRepository->findAll();
-        
-        foreach ($players as $player) {
-            $playersFinal[] = $player->toArray();
-        }
-
-        return $playersFinal;
+        return $players = $this->playerRepository->findAll();
     }
 
     /**
@@ -126,5 +124,22 @@ class PlayerService implements PlayerServiceInterface
         $this->em->remove($player);
 
         return $this->em->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serializeJson($data)
+    {
+        $encoders = new JsonEncoder();
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function($data) {
+                return $data->getIdentifier();
+            }
+        ];
+        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
+
+        return $serializer->serialize($data, 'json');
     }
 }

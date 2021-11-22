@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 class PlayerController extends AbstractController
 {
@@ -31,15 +32,15 @@ class PlayerController extends AbstractController
 
         $players = $this->playerService->getAll();
 
-        return new JsonResponse($players);
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($players));
     }
 
     #[Route('/player/display/{identifier}', name: 'player_display', requirements: ['identifier' => '^([a-z0-9]{40})$'], methods: ['HEAD', 'GET'])]
+    #[Entity("player", expr:"repository.findOneByIdentifier(identifier)")]
     public function display(Player $player)
     {
         $this->denyAccessUnlessGranted('playerDisplay', $player);
-        return new JsonResponse($player->toArray());
-    }
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));    }
 
     #[Route('/player/create', name: 'player_create', methods: ['HEAD', 'POST'])]
     public function create(Request $request)
@@ -47,7 +48,7 @@ class PlayerController extends AbstractController
         $this->denyAccessUnlessGranted('playerCreate', null);
         $player = $this->playerService->create($request->getContent());
 
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     #[Route('/player/modify/{identifier}', name: 'player_modify', requirements: ['identifier' => '^([a-z0-9]{40})$'], methods: ['PUT', 'HEAD'])]
@@ -56,13 +57,13 @@ class PlayerController extends AbstractController
         $this->denyAccessUnlessGranted('playerModify', $player);
         $player = $this->playerService->modify($player, $request->getContent());
 
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     #[Route('/player/delete/{identifier}', name: 'player_delete', requirements: ['identifier' => '^([a-z0-9]{40})$'], methods: ['DELETE', 'HEAD'])]
     public function delete(Player $player)
     {
-        $player = $this->playerService->delete($player);
         $this->denyAccessUnlessGranted('playerDelete', $player);
+        $player = $this->playerService->delete($player);
     }
 }
