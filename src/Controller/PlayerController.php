@@ -38,7 +38,7 @@ class PlayerController extends AbstractController
      * Displays availables Players
      * @OA\Response(response= 200, description= "Success", @OA\Schema (type="array", ref=@Model(type= Playerphp::class)))
      * @OA\Response(response= 403, description= "Access denied")
-     * @OA\Tag(name= "Playerphp")
+     * @OA\Tag(name= "Player")
      * */
     public function index(): JsonResponse
     {

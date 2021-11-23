@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Entity\Character;
 use App\Form\CharacterType;
 use App\Repository\CharacterRepository;
+use App\Event\CharacterEvent;
+
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -20,6 +22,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CharacterService implements CharacterServiceInterface
 {
@@ -27,17 +30,20 @@ class CharacterService implements CharacterServiceInterface
     private $formFactory;
     private $em;
     private $validator;
+    private $dispatcher;
 
     public function __construct(
         CharacterRepository $characterRepository,
         EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->characterRepository = $characterRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->validator = $validator;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -62,6 +68,9 @@ class CharacterService implements CharacterServiceInterface
         ;
         $this->submit($character, CharacterType::class, $data);
         $this->isEntityFilled($character);
+
+        $event = new CharacterEvent($character);
+        $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
 
         $this->em->persist($character);
         $this->em->flush();

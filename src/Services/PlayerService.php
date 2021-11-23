@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\Player;
 use App\Form\PlayerType;
 use App\Repository\PlayerRepository;
+use App\Event\PlayerEvent;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PlayerService implements PlayerServiceInterface
 {
@@ -30,12 +32,14 @@ class PlayerService implements PlayerServiceInterface
         PlayerRepository $playerRepository,
         EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->playerRepository = $playerRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->validator = $validator;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -108,6 +112,9 @@ class PlayerService implements PlayerServiceInterface
     {
         $player->setModification(new \DateTime());
         $this->submit($player, PlayerType::class, $data);
+
+        $event = new PlayerEvent($player);
+        $this->dispatcher->dispatch($event, PlayerEvent::PLAYER_MODIFIED);
 
         $this->em->persist($player);
         $this->em->flush();

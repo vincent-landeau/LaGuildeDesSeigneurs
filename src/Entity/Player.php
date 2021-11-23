@@ -68,13 +68,13 @@ class Player
 
     /**
      * @ORM\Column(type="datetime", name="gls_creation")
-     * @Assert\Type("\DateTimeInterface")
+     * @Assert\Type("\DateTime")
      */
     private $creation;
 
     /**
      * @ORM\Column(type="datetime", name="gls_modification")
-     * @Assert\Type("\DateTimeInterface")
+     * @Assert\Type("\DateTime")
      */
     private $modification;
 
