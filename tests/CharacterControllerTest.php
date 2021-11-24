@@ -64,6 +64,24 @@ class CharacterControllerTest extends WebTestCase
     }
 
     /**
+     * Tests get all characters whose intelligence level is greater than or equal to a level.
+     */
+    public function testAllByIntelligenceLevel()
+    {
+        $this->client->request('GET', '/character/intelligence/120');
+        $this->assertJsonResponse($this->client->getResponse());
+    }
+
+    /**
+     * Tests get all characters whose intelligence level is greater than or equal to a level.
+     */
+    public function testBadAllByIntelligenceLevel()
+    {
+        $this->client->request('GET', '/character/intelligence/2125');
+        $this->assertError404($this->client->getResponse()->getStatusCode());
+    }
+
+    /**
      * Test d'affichage d'un caractère;
      */
     public function testDisplay()
@@ -125,7 +143,7 @@ class CharacterControllerTest extends WebTestCase
     public function testDelete() 
     {
         $this->client->request('DELETE', '/character/delete/' . self::$identifier);
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function assertIdentifier()

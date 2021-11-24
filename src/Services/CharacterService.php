@@ -167,6 +167,14 @@ class CharacterService implements CharacterServiceInterface
         return array_slice($images, 0, $number, true);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllByIntelligenceLevel(int $level)
+    {
+        return $this->characterRepository->findAllByIntelligenceLevel($level);
+    }
+
 
     /**
      * {@inheritdoc}

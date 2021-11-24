@@ -117,21 +117,16 @@ class CharacterApiHtmlController extends AbstractController
         return $this->redirectToRoute('character_api_html_index', [], Response::HTTP_SEE_OTHER);
     }
 
-//    /**
-//     * Displays Characters by their intelligence level
-//     *
-//     * @Route("/intelligence/{level}",
-//     *     name="character_api_html_intelligence_level",
-//     *     requirements={"level": "^([0-9]{1,3})$"},
-//     *     methods={"GET", "HEAD"}
-//     * )
-//     */
-//    public function intelligenceLevel(int $level)
-//    {
-//        $this->denyAccessUnlessGranted('characterIndex', null);
-//
-//        return $this->render('character_api_html/index.html.twig', [
-//            'characters' => $this->characterService->getAllByIntelligenceLevel($level),
-//        ]);
-//    }
+    #[Route("/intelligence/{level}", name: "character_api_html_all_by_intelligence_level", methods: ["GET"])]
+    public function showAllByIntelligenceLevel(int $level): Response
+    {
+        $response = $this->client->request(
+            'GET',
+            "http://localhost/LaGuildeDesSeigneurs/public/character/intelligence/$level"
+        );
+        return $this->render('character_api_html/index.html.twig', [
+            'characters' => $response->toArray(),
+            'level' => $level
+        ]);
+    }
 }

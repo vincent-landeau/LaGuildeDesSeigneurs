@@ -41,6 +41,11 @@ interface CharacterServiceInterface
     public function getImagesByKind(string $kind, int $number);
 
     /**
+     * Return character whose intelligence level is greater than or equal to a number passed in the url.
+     */
+    public function getAllByIntelligenceLevel(int $level);
+
+    /**
      * Deletes the player.
      */
     public function serializeJson($data);

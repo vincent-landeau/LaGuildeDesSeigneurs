@@ -3,7 +3,12 @@
 {% block title %}Character index{% endblock %}
 
 {% block body %}
-    <h1>Character index</h1>
+    <h1>
+        Listes des Personnages
+        {% if level is defined  %}
+            avec une intelligence supérieur ou égale à {{ level }}
+        {% endif %}
+    </h1>
 {# Table headers #}
     <table class="table table-hover">
         <thead>

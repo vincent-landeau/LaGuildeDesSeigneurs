@@ -133,4 +133,13 @@ class CharacterController extends AbstractController
 
         return new JsonResponse($this->characterService->getImagesByKind($kind, $number));
     }
+
+    #[Route('/character/intelligence/{level}', name: 'character_all_by_intelligence_level', requirements: ['level' => '^([0-9]{1,3})$'], methods: ['GET', 'HEAD'])]
+    public function allByIntelligenceLevel(int $level)
+    {
+        $this->denyAccessUnlessGranted('characterIndex', null);
+        $characters = $this->characterService->getAllByIntelligenceLevel($level);
+
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
+    }
 }
