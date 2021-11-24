@@ -44,4 +44,14 @@ interface CharacterServiceInterface
      * Deletes the player.
      */
     public function serializeJson($data);
+
+    /**
+     * Create the character form.
+     */
+    public function createFormHtml($character);
+
+    /**
+     * Modify the character form.
+     */
+    public function modifyFormHtml($character);
 }

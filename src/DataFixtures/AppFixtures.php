@@ -19,7 +19,7 @@ class AppFixtures extends Fixture
                 ->setName('Eldalote' . $i)
                 ->setSurname('Fleur elfique')
                 ->setCaste('Elfe')
-                ->setKnowledge('Ars')
+                ->setKnowledge('Arts')
                 ->setIntelligence(rand(100, 200))
                 ->setLife(rand(10, 20))
                 ->setIdentifier(hash('sha1', uniqid()))

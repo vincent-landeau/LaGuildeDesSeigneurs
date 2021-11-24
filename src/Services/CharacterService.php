@@ -38,7 +38,8 @@ class CharacterService implements CharacterServiceInterface
         FormFactoryInterface $formFactory,
         ValidatorInterface $validator,
         EventDispatcherInterface $dispatcher
-    ) {
+    )
+    {
         $this->characterRepository = $characterRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
@@ -61,21 +62,9 @@ class CharacterService implements CharacterServiceInterface
     {
         //Use with {"kind":"Dame","name":"Eldalótë","surname":"Fleur elfique","caste":"Elfe","knowledge":"Arts","intelligence":120,"life":12,"image":"/images/eldalote.jpg"}
         $character = new Character();
-        $character
-            ->setIdentifier(hash('sha1', uniqid()))
-            ->setCreation(new DateTime())
-            ->setModification(new DateTime())
-        ;
         $this->submit($character, CharacterType::class, $data);
-        $this->isEntityFilled($character);
 
-        $event = new CharacterEvent($character);
-        $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
-
-        $this->em->persist($character);
-        $this->em->flush();
-
-        return $character;
+        return $character->createFormHtml($character);
     }
 
     /**
@@ -85,7 +74,7 @@ class CharacterService implements CharacterServiceInterface
     {
         $errors = $this->validator->validate($character);
         if (count($errors)) {
-            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . $this->serializeJson($character));
+            throw new UnprocessableEntityHttpException((string)$errors . 'Missing data for Entity -> ' . $this->serializeJson($character));
         }
     }
 
@@ -120,10 +109,7 @@ class CharacterService implements CharacterServiceInterface
         $character->setModification(new \DateTime());
         $this->submit($character, CharacterType::class, $data);
 
-        $this->em->persist($character);
-        $this->em->flush();
-
-        return $character;
+        return $character->modifyFormHtml($character);
     }
 
     /**
@@ -148,8 +134,7 @@ class CharacterService implements CharacterServiceInterface
             ->files()
             ->in($folder)
             ->notPath('/cartes/')
-            ->sortByName()
-        ;
+            ->sortByName();
 
         $images = [];
         foreach ($finder as $file) {
@@ -172,8 +157,7 @@ class CharacterService implements CharacterServiceInterface
             ->files()
             ->in($folder)
             ->notPath('/cartes/')
-            ->sortByName()
-        ;
+            ->sortByName();
 
         $images = [];
         foreach ($finder as $file) {
@@ -200,5 +184,39 @@ class CharacterService implements CharacterServiceInterface
         $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
 
         return $serializer->serialize($data, 'json');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createFormHtml($character)
+    {
+        $character
+            ->setIdentifier(hash('sha1', uniqid()))
+            ->setCreation(new DateTime())
+            ->setModification(new DateTime());
+
+        $this->isEntityFilled($character);
+
+        $event = new CharacterEvent($character);
+        $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
+
+        $this->em->persist($character);
+        $this->em->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function modifyFormHtml($character)
+    {
+        $this->isEntityFilled($character);
+
+        $character->setModification(new DateTime());
+
+        $this->em->persist($character);
+        $this->em->flush();
+
+        return $character;
     }
 }

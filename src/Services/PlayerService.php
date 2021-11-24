@@ -112,7 +112,6 @@ class PlayerService implements PlayerServiceInterface
     {
         $player->setModification(new \DateTime());
         $this->submit($player, PlayerType::class, $data);
-
         $event = new PlayerEvent($player);
         $this->dispatcher->dispatch($event, PlayerEvent::PLAYER_MODIFIED);
 

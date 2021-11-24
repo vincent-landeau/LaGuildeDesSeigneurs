@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="row">
+        <div class="col-auto my-1">
+            <a href="{{ path('character_html_index') }}" class="btn btn-secondary mx-1">Retourner à la liste</a>
+            <button class="btn btn-primary mx-1">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
+{{ form_end(form) }}
