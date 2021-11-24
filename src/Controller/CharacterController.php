@@ -113,6 +113,8 @@ class CharacterController extends AbstractController
     {
         $character = $this->characterService->delete($character);
         $this->denyAccessUnlessGranted('characterDelete', $character);
+
+        return new JsonResponse(array('delete' => true));
     }
 
     #[Route('/character/images/{number}', name: 'character_images', requirements: ['number' => '^([0-9]{1,2})$'], methods: ['GET', 'HEAD'])]

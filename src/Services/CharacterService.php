@@ -63,8 +63,7 @@ class CharacterService implements CharacterServiceInterface
         //Use with {"kind":"Dame","name":"Eldalótë","surname":"Fleur elfique","caste":"Elfe","knowledge":"Arts","intelligence":120,"life":12,"image":"/images/eldalote.jpg"}
         $character = new Character();
         $this->submit($character, CharacterType::class, $data);
-
-        return $character->createFormHtml($character);
+        return $this->createFormHtml($character);
     }
 
     /**
@@ -109,7 +108,7 @@ class CharacterService implements CharacterServiceInterface
         $character->setModification(new \DateTime());
         $this->submit($character, CharacterType::class, $data);
 
-        return $character->modifyFormHtml($character);
+        return $this->modifyFormHtml($character);
     }
 
     /**
@@ -197,12 +196,13 @@ class CharacterService implements CharacterServiceInterface
             ->setModification(new DateTime());
 
         $this->isEntityFilled($character);
-
         $event = new CharacterEvent($character);
         $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
 
         $this->em->persist($character);
         $this->em->flush();
+
+        return $character;
     }
 
     /**
